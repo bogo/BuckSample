@@ -8,7 +8,10 @@ def apple_third_party_lib(**kwargs):
         **kwargs
     )
 
-def apple_test_lib(name, **kwargs):
+def apple_test_lib(
+    name,
+    frameworks = [],
+    **kwargs):
     substitutions = {
         "CURRENT_PROJECT_VERSION": "1",
         "DEVELOPMENT_LANGUAGE": "en-us",
@@ -20,8 +23,8 @@ def apple_test_lib(name, **kwargs):
         visibility = ["PUBLIC"],
         configs = library_configs(),
         frameworks = [
-          "$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework"
-          ],
+            "$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework"
+        ] + frameworks,
         **kwargs
     )
 
