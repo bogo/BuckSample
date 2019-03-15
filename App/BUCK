@@ -15,7 +15,7 @@ apple_resource(
 )
 
 app_tests = [
-    "//App/Tests:Tests",
+    "//App:Tests",
 ]
 
 first_party_library_dependencies = [
@@ -86,14 +86,14 @@ xcode_workspace_config(
         },
     },
     action_config_names = {"profile": "Profile"},
+    extra_schemes = {
+        "UI Tests" : ":ui-tests"
+    },
 )
 
 apple_bundle(
     name = "ExampleAppBundle",
-    visibility = [
-        "//App:",
-        "//App/UITests:",
-    ],
+    visibility = [ "//App:" ],
     extension = "app",
     binary = ":ExampleAppBinary",
     product_name = "ExampleApp",
@@ -241,3 +241,42 @@ apple_resource(
     files = glob(["MessageExtension/**/*.storyboard"])
 )
 ### iMessage Extension End ###
+
+
+### Tests Begin ###
+
+apple_test_lib(
+    name = "Tests",
+    srcs = glob([
+        "Tests/*.swift",
+    ]),
+    info_plist = "Tests/Info.plist",
+    deps = [
+        ":ExampleApp",
+    ],
+)
+
+### Tests End ###
+
+### UI Tests Begin ###
+
+xcode_workspace_config(
+   name = "ui-tests",
+   workspace_name = "UI Tests",
+   extra_tests = [ ":UITests" ],
+)
+
+apple_test_lib(
+    name = "UITests",
+    test_host_app = ":ExampleAppBundle",
+    srcs = [
+        "UITests/BuckSampleUITests.swift",
+    ],
+    info_plist = "UITests/Info.plist",
+    labels = ['ui'],
+    deps = [
+        "//Libraries/Swift2:Swift2",
+    ],
+)
+
+### UI Tests End ###
